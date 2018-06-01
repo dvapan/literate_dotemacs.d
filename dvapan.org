@@ -1,0 +1,305 @@
+#+TITLE: Кастомизация Emacs Starter Kit
+#+OPTIONS: toc:2 num:nil ^:nil
+
+* Задачи
+** TODO [#C] перевод Starter kit на русский
+   Перевод уже [[http://zahardzhan.github.io/2010/emacs-starter-kit-the-program.html][есть]]. Его нужно адаптировать к текущим реалиям
+* Загрузка дополнительных элементов 
+** Starter kit
+*** Дополнительные настройки 
+     [[file:starter-kit-misc-recommended.org][starter-kit-misc-recommended]]
+     #+BEGIN_SRC emacs-lisp 
+       (starter-kit-load "misc-recommended")
+     #+END_SRC
+*** Интерпретатор командной строки
+     [[file:starter-kit-eshell.org][starter-kit-eshell]]
+    #+BEGIN_SRC emacs-lisp 
+      (starter-kit-load "eshell")
+    #+END_SRC
+*** Дополнительные настройки org-mode  
+    [[file:starter-kit-org.org][starter-kit-org]]
+    #+BEGIN_SRC emacs-lisp 
+      (starter-kit-load "org")
+    #+END_SRC
+*** Поддержка Lisp
+    [[file:starter-kit-lisp.org][starter-kit-lisp]]
+    #+begin_src emacs-lisp
+      (starter-kit-load "lisp")
+    #+end_src
+*** Сниппеты
+    [[file:starter-kit-yasnippet.org][starter-kit-yasnippet]]
+    #+BEGIN_SRC emacs-lisp 
+      (starter-kit-load "yasnippet")
+    #+END_SRC
+*** LaTeX
+    [[file:starter-kit-latex.org][starter-kit-latex]]
+    #+begin_src emacs-lisp
+      (starter-kit-load "latex")
+    #+end_src
+
+    Добавляем cdlatex для org-mode
+    #+begin_src emacs-lisp
+      (add-hook 'org-mode-hook 'turn-on-org-cdlatex )
+    #+end_src
+*** Python
+    [[file:starter-kit-python.org][starter-kit-python]]
+    #+begin_src emacs-lisp
+      (starter-kit-load "python")
+    #+end_src
+
+** Другие источники
+*** Автодополнение
+    Устанавливаем и загружаем конфигурацию по умолчанию
+    #+begin_src emacs-lisp
+      (starter-kit-install-if-needed 'auto-complete)
+      (require 'auto-complete-config)
+
+      (ac-config-default)
+      (global-auto-complete-mode)
+      (require 'cc-mode)
+      (require 'lisp-mode)
+      (setq-default ac-auto-start t)
+      (setq-default ac-auto-show-menu t)
+      (add-hook 'slime-mode-hook 'set-up-slime-ac)
+      (add-hook 'slime-repl-mode-hook 'set-up-slime-ac)
+      (eval-after-load "auto-complete"
+                       '(add-to-list 'ac-modes 'slime-repl-mode))
+    #+end_src
+*** Установка CEDET
+    #+begin_src emacs-lisp :tangle yes
+      ;;; minimial-cedet-config.el --- Working configuration for CEDET from bzr
+
+      ;; Copyright (C) Alex Ott
+      ;;
+      ;; Author: Alex Ott <alexott@gmail.com>
+      ;; Keywords: cedet, C++, Java
+      ;; Requirements: CEDET from bzr (http://cedet.sourceforge.net/bzr-repo.shtml)
+
+      ;; Do checkout of fresh CEDET, and use this config (don't forget to change path below)
+
+      (setq cedet-root-path (file-name-as-directory "~/.emacs.d/cedet/"))
+
+      (load-file (concat cedet-root-path "cedet-devel-load.el"))
+      (add-to-list 'load-path (concat cedet-root-path "contrib"))
+
+      ;; select which submodes we want to activate
+      (add-to-list 'semantic-default-submodes 'global-semantic-mru-bookmark-mode)
+      (add-to-list 'semantic-default-submodes 'global-semanticdb-minor-mode)
+      (add-to-list 'semantic-default-submodes 'global-semantic-idle-scheduler-mode)
+      (add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode)
+      (add-to-list 'semantic-default-submodes 'global-cedet-m3-minor-mode)
+      (add-to-list 'semantic-default-submodes 'global-semantic-highlight-func-mode)
+      (add-to-list 'semantic-default-submodes 'global-semanticdb-minor-mode)
+
+      ;; Activate semantic
+      (semantic-mode 1)
+
+      ;; load contrib library
+      (require 'eassist)
+      (require 'semantic/bovine/gcc)
+      (require 'semantic/bovine/clang)
+
+      (defun my-c-mode-cedet-hook ()
+        (add-to-list 'ac-sources 'ac-source-gtags)
+        (add-to-list 'ac-sources 'ac-source-semantic))
+      (add-hook 'c-mode-common-hook 'my-c-mode-cedet-hook)
+
+      ;; если вы хотите включить поддержку gnu global
+      (when (cedet-gnu-global-version-check t)
+        (semanticdb-enable-gnu-global-databases 'c-mode)
+        (semanticdb-enable-gnu-global-databases 'c++-mode))
+
+      ;; включить поддержку ctags для основных языков:
+      ;;  Unix Shell, Perl, Pascal, Tcl, Fortran, Asm
+      (when (cedet-ectag-version-check t)
+        (semantic-load-enable-primary-ectags-support))
+
+      ;; customisation of modes
+      (defun alexott/cedet-hook ()
+        (local-set-key [(control return)] 'semantic-ia-complete-symbol-menu)
+        (local-set-key "\C-c?" 'semantic-ia-complete-symbol)
+        ;;
+        (local-set-key "\C-c>" 'semantic-complete-analyze-inline)
+        (local-set-key "\C-c=" 'semantic-decoration-include-visit)
+
+        (local-set-key "\C-cj" 'semantic-ia-fast-jump)
+        (local-set-key "\C-cq" 'semantic-ia-show-doc)
+        (local-set-key "\C-cs" 'semantic-ia-show-summary)
+        (local-set-key "\C-cp" 'semantic-analyze-proto-impl-toggle)
+        )
+      (add-hook 'c-mode-common-hook 'alexott/cedet-hook)
+      (add-hook 'lisp-mode-hook 'alexott/cedet-hook)
+      (add-hook 'scheme-mode-hook 'alexott/cedet-hook)
+      (add-hook 'emacs-lisp-mode-hook 'alexott/cedet-hook)
+      (add-hook 'erlang-mode-hook 'alexott/cedet-hook)
+
+      (defun alexott/c-mode-cedet-hook ()
+        (local-set-key "\C-ct" 'eassist-switch-h-cpp)
+        (local-set-key "\C-xt" 'eassist-switch-h-cpp)
+        (local-set-key "\C-ce" 'eassist-list-methods)
+        (local-set-key "\C-c\C-r" 'semantic-symref)
+        )
+      (add-hook 'c-mode-common-hook 'alexott/c-mode-cedet-hook)
+
+      (semanticdb-enable-gnu-global-databases 'c-mode t)
+      (semanticdb-enable-gnu-global-databases 'c++-mode t)
+
+      (when (cedet-ectag-version-check t)
+        (semantic-load-enable-primary-ectags-support))
+
+      ;; SRecode
+      (global-srecode-minor-mode 1)
+
+      ;; EDE
+      (global-ede-mode 1)
+      (ede-enable-generic-projects)
+
+
+      ;; Setup JAVA....
+      (require 'cedet-java)
+
+      ;;; minimial-cedet-config.el ends here
+    #+end_src
+    
+*** Настройка speedbar
+    #+begin_src emacs-lisp
+    (starter-kit-install-if-needed 'sr-speedbar)
+    #+end_src
+*** Нумерация строк
+    [[file:src/linum%2B.el][linum+]]
+    #+begin_src emacs-lisp
+      ;; (require 'linum+)
+      ;; (setq linum-format "%d ")
+      ;; (global-linum-mode 1)
+    #+end_src
+*** режим для README файлов в формате Markdown
+    #+begin_src emacs-lisp
+      (starter-kit-install-if-needed 'markdown-mode)
+    #+end_src
+*** Smartparens
+    #+begin_src emacs-lisp :tangle yes
+      (starter-kit-install-if-needed 'smartparens)
+
+      (require 'smartparens-config)
+      (smartparens-global-mode)
+
+    #+end_src
+*** Slime
+    #+begin_src emacs-lisp :tangle yes
+      (starter-kit-install-if-needed 'slime)
+
+      (require 'slime)
+      (require 'slime-autoloads)
+      (slime-setup '(slime-asdf
+                     slime-fancy
+                     slime-indentation
+                     slime-banner))
+      (setq-default slime-net-coding-system 'utf-8-unix)
+
+    #+end_src
+*** Some setup
+    #+begin_src emacs-lisp :tangle yes
+      (setq
+       c-default-style "linux" ;; set style to "linux"
+       )
+
+      (global-set-key (kbd "RET") 'newline-and-indent)  ; automatically
+                                              ; indent when press RET
+
+      ;; activate whitespace-mode to view all whitespace characters
+      (global-set-key (kbd "C-c w") 'whitespace-mode)
+
+      
+
+      ;; set default compile kbd to C-c C-c
+      (define-key c-mode-map (kbd "C-c C-c") 'compile)
+      (define-key c++-mode-map (kbd "C-c C-c") 'compile)
+      (define-key java-mode-map (kbd "C-c C-c") 'compile)
+      (define-key python-mode-map (kbd "C-c C-c") 'compile)
+      
+
+      ;; show unncessary whitespace that can mess up your diff
+      (add-hook 'prog-mode-hook (lambda () (interactive) (setq show-trailing-whitespace 1)))
+
+      ;; use space to indent by default
+      (setq-default indent-tabs-mode nil)
+
+      ;; set appearance of a tab that is represented by 4 spaces
+      (setq-default tab-width 4)
+
+      ;; jedi
+      (add-hook 'python-mode-hook 'jedi:setup)
+      (add-hook 'python-mode-hook 'linum-mode)
+      (setq jedi:complete-on-dot t)
+      (setq jedi:environment-root "jedi")
+
+    #+end_src
+* Внешний вид
+  Устанавливаем тему dark-blue из стандартного комплекта
+  #+begin_src emacs-lisp
+    (load-theme 'deeper-blue)
+    ;; (color-theme-initialize)
+  #+end_src
+  Сайд-бар тоже нужно убрать - он не вписывается в тему, да и не так
+  много в нем пользы при работе в основном через клавиатуру 
+  #+begin_src emacs-lisp 
+    (when (fboundp 'scroll-bar-mode)
+      (scroll-bar-mode -1))
+  #+end_src
+  
+* Дополнительные функции
+** Настройка shell
+   Zsh работает с emacs не адекватно. Рабочее решение перевести его на
+   работу с bash
+   #+begin_src emacs-lisp :tangle yes
+     (setq explicit-shell-file-name "/bin/bash")
+   #+end_src
+** Макросы для сайта Радонежского народа
+   Здесь определяются макросы для облегчения работы с материалами на
+   сайт. Статьи посылаются в формате doc/docx и содержат в себе
+   картинки. Их необходимо извелечь, а статью перекодировать в
+   html. При этом учесть, что на сайте картинки будут расположены в
+   определенном месте: 
+   news/{anons,reportaj}/<<раздел для статьи>>/<<имя статьи>>/
+   
+   
+*** 
+  
+* Настройка org-mode
+  Сделать TODO зависимыми от вложенных 
+  #+BEGIN_SRC emacs-lisp
+    (setq org-enforce-todo-dependencies t)
+  #+END_SRC
+
+  Задать TODO, STARTED, DONE | CANCELED
+
+  #+begin_src emacs-lisp
+    (setq org-todo-keywords
+          '((sequence "TODO(t!)" "|" "DONE(d!)")
+            (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELED(c@/!)" "PHONE" "MEETING")))
+
+    (setq org-todo-keyword-faces
+          '(("TODO" :foreground "red" :weight bold)
+            ;; ("IN PROGRESS" :foreground "yellow" :weight bold)
+            ;; ("DONE" :foreground "green" :weight bold)
+            ("WAITING" :foreground "orange" :weight bold)
+            ("HOLD" :foreground "magenta" :weight bold)
+            ("CANCELED" :foreground "forest green" :weight bold)
+            ("MEETING" :foreground "forest green" :weight bold)
+            ("PHONE" :foreground "forest green" :weight bold)))
+
+    (add-hook 'org-mode-hook (lambda () (local-set-key "\C-c." 'org-time-stamp)))
+
+  #+end_src
+
+  #+begin_src emacs-lisp :tangle yes
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((python . t) (ditaa . t) (dot . t) (C . t)))
+  #+end_src
+
+  Задаем формат даты для экспорта
+  #+BEGIN_SRC emacs-lisp
+    (setq org-export-date-timestamp-format "%F")
+  #+END_SRC
+
