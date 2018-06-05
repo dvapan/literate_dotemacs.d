@@ -12,7 +12,7 @@
        (starter-kit-load "misc-recommended")
      #+END_SRC
 *** Интерпретатор командной строки
-     [[file:starter-kit-eshell.org][starter-kit-eshell]]
+    [[file:starter-kit-eshell.org][starter-kit-eshell]]
     #+BEGIN_SRC emacs-lisp 
       (starter-kit-load "eshell")
     #+END_SRC
@@ -162,7 +162,7 @@
     #+end_src
     
 *** Настройка speedbar
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp 
     (starter-kit-install-if-needed 'sr-speedbar)
     #+end_src
 *** Нумерация строк
@@ -197,6 +197,39 @@
       (setq-default slime-net-coding-system 'utf-8-unix)
 
     #+end_src
+*** Multiple cursors
+
+[[https://github.com/magnars/multiple-cursors.el][README]]
+*Basic usage*
+Start out with:
+#+begin_src emacs-lisp :tangle yes
+  (starter-kit-install-if-needed 'multiple-cursors)
+  (require 'multiple-cursors)
+#+end_src
+
+Then you have to set up your keybindings - multiple-cursors doesn't
+presume to know how you'd like them laid out. Here are some examples:
+
+When you have an active region that spans multiple lines, the
+following will add a cursor to each line:
+
+#+begin_src emacs-lisp :tangle yes
+  (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+#+end_src
+When you want to
+add multiple cursors not based on continuous lines, but based on
+keywords in the buffer, use:
+#+begin_src emacs-lisp :tangle yes
+  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+#+end_src
+First mark the word, then add more cursors.
+
+To get out of multiple-cursors-mode, press <return> or C-g. The latter
+will first disable multiple regions before disabling multiple
+cursors. If you want to insert a newline in multiple-cursors-mode, use
+C-j.
 *** Some setup
     #+begin_src emacs-lisp :tangle yes
       (setq
@@ -204,7 +237,7 @@
        )
 
       (global-set-key (kbd "RET") 'newline-and-indent)  ; automatically
-                                              ; indent when press RET
+      ; indent when press RET
 
       ;; activate whitespace-mode to view all whitespace characters
       (global-set-key (kbd "C-c w") 'whitespace-mode)
@@ -234,12 +267,8 @@
       (setq jedi:environment-root "jedi")
 
     #+end_src
+
 * Внешний вид
-  Устанавливаем тему dark-blue из стандартного комплекта
-  #+begin_src emacs-lisp
-    (load-theme 'deeper-blue)
-    ;; (color-theme-initialize)
-  #+end_src
   Сайд-бар тоже нужно убрать - он не вписывается в тему, да и не так
   много в нем пользы при работе в основном через клавиатуру 
   #+begin_src emacs-lisp 
@@ -261,10 +290,6 @@
    html. При этом учесть, что на сайте картинки будут расположены в
    определенном месте: 
    news/{anons,reportaj}/<<раздел для статьи>>/<<имя статьи>>/
-   
-   
-*** 
-  
 * Настройка org-mode
   Сделать TODO зависимыми от вложенных 
   #+BEGIN_SRC emacs-lisp
