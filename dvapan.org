@@ -230,6 +230,14 @@ To get out of multiple-cursors-mode, press <return> or C-g. The latter
 will first disable multiple regions before disabling multiple
 cursors. If you want to insert a newline in multiple-cursors-mode, use
 C-j.
+*** W3M
+    Попытаемся перейти на броузер W3M. Местами Chrome надоедает своей
+    объемностью. Хочется чего-то более легкого.
+    #+begin_src emacs-lisp :tangle yes
+      ;;; instalation package
+      (starter-kit-install-if-needed 'w3m)
+
+    #+end_src
 *** Some setup
     #+begin_src emacs-lisp :tangle yes
       (setq
