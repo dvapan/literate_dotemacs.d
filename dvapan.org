@@ -7,10 +7,6 @@
 * Загрузка дополнительных элементов 
 ** Starter kit
 *** Дополнительные настройки 
-     [[file:starter-kit-misc-recommended.org][starter-kit-misc-recommended]]
-     #+BEGIN_SRC emacs-lisp 
-       (starter-kit-load "misc-recommended")
-     #+END_SRC
 *** Интерпретатор командной строки
     [[file:starter-kit-eshell.org][starter-kit-eshell]]
     #+BEGIN_SRC emacs-lisp 
@@ -276,14 +272,6 @@ C-j.
 
     #+end_src
 
-* Внешний вид
-  Сайд-бар тоже нужно убрать - он не вписывается в тему, да и не так
-  много в нем пользы при работе в основном через клавиатуру 
-  #+begin_src emacs-lisp 
-    (when (fboundp 'scroll-bar-mode)
-      (scroll-bar-mode -1))
-  #+end_src
-  
 * Дополнительные функции
 ** Настройка shell
    Zsh работает с emacs не адекватно. Рабочее решение перевести его на

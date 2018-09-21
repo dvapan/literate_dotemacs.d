@@ -13,9 +13,11 @@ enough to live in =starter-kit-misc.org=.
    :END:
 #+name: starter-kit-window-view-stuff-recommended
 #+begin_src emacs-lisp 
-(when window-system
-  (tooltip-mode -1)
-  (tool-bar-mode -1))
+  (when window-system
+    (tooltip-mode -1)
+    (tool-bar-mode -1)
+    (scroll-bar-mode -1)
+    (horizontal-scroll-bar-mode -1))
 #+end_src
 
 ** No Menu Bar                                                       :visual:
