@@ -6,7 +6,6 @@
    Перевод уже [[http://zahardzhan.github.io/2010/emacs-starter-kit-the-program.html][есть]]. Его нужно адаптировать к текущим реалиям
 * Загрузка дополнительных элементов 
 ** Starter kit
-*** Дополнительные настройки 
 *** Интерпретатор командной строки
     [[file:starter-kit-eshell.org][starter-kit-eshell]]
     #+BEGIN_SRC emacs-lisp 

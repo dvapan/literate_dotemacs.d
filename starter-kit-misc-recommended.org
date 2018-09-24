@@ -37,3 +37,38 @@ Set this to whatever browser you use e.g...
 : ;; (setq browse-url-browser-function 'browse-default-w3m)
 : ;; (setq browse-url-browser-function 'browse-url-generic
 : ;;       browse-url-generic-program "conkeror")
+
+** Users for different names
+   This settings are user-speciffic, but I need it for different
+   computers with different usernames. Such kind of duck tape.
+
+*** Set editor
+    Some useful view and keybindings for programming modes
+    #+BEGIN_SRC emacs-lisp
+      (setq
+       c-default-style "linux" ;; set style to "linux"
+       )
+
+      (global-set-key (kbd "RET") 'newline-and-indent)  ; automatically
+                                              ; indent when press RET
+
+      ;; activate whitespace-mode to view all whitespace characters
+      (global-set-key (kbd "C-c w") 'whitespace-mode)
+
+      ;; show unncessary whitespace that can mess up your diff
+      (add-hook 'prog-mode-hook (lambda () (interactive) (setq show-trailing-whitespace 1)))
+
+      ;; use space to indent by default
+      (setq-default indent-tabs-mode nil)
+
+      ;; set appearance of a tab that is represented by 4 spaces
+      (setq-default tab-width 4)
+
+    #+END_SRC
+
+*** Set color theme
+    I prefere dark color themes.
+
+    #+BEGIN_SRC emacs-lisp
+      (load-theme 'misterioso)
+    #+END_SRC

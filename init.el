@@ -35,3 +35,7 @@
 
 ;;; init.el ends here
 (put 'upcase-region 'disabled nil)
+
+
+;;; load dark color theme at the begining
+(load-theme 'misterioso)
