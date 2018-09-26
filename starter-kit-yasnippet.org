@@ -41,23 +41,9 @@ inspired by TextMate's templating syntax.
    :END:
 #+begin_src emacs-lisp
   (require 'yasnippet)
-  (yas-global-mode 1)
+  (yas/global-mode 1)
 #+end_src
 
-
-** Load Snippets from melpa
-   :PROPERTIES:
-   :CUSTOM_ID: melpa-snippets 
-   :END:      
-Download package for snippets
-#+begin_src emacs-lisp :tangle yes
-  (starter-kit-install-if-needed 'yasnippet-snippets)
-#+end_src
-
-Load the snippets defined in =elpa/yasnippet-snippets= directory.
-#+begin_src emacs-lisp :tangle yes
-  (yas/load-directory (expand-file-name "elpa/yasnippet-snippets-20180503.657" starter-kit-dir))
-#+end_src
 
 ** Configure Yasnippets for Org Mode
    :PROPERTIES:

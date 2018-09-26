@@ -399,7 +399,6 @@ everyone using the starter kit.
   #+BEGIN_SRC emacs-lisp 
     (starter-kit-load "misc-recommended")"Loaded /home/daniil/.emacs.d/starter-kit-misc-recommended.el"
   #+END_SRC
-
   
 ** Load other packages
 The following files contains instructions for download and setup some

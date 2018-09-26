@@ -1,0 +1,186 @@
+#+TITLE: Кастомизация Emacs Starter Kit
+#+OPTIONS: toc:2 num:nil ^:nil
+
+* Задачи
+** TODO [#C] перевод Starter kit на русский
+   Перевод уже [[http://zahardzhan.github.io/2010/emacs-starter-kit-the-program.html][есть]]. Его нужно адаптировать к текущим реалиям
+* Загрузка дополнительных элементов 
+** Starter kit
+*** Интерпретатор командной строки
+    [[file:starter-kit-eshell.org][starter-kit-eshell]]
+    #+BEGIN_SRC emacs-lisp 
+      (starter-kit-load "eshell")
+    #+END_SRC
+*** Дополнительные настройки org-mode  
+    [[file:starter-kit-org.org][starter-kit-org]]
+    #+BEGIN_SRC emacs-lisp 
+      (starter-kit-load "org")
+    #+END_SRC
+*** Поддержка Lisp
+    [[file:starter-kit-lisp.org][starter-kit-lisp]]
+    #+begin_src emacs-lisp
+      (starter-kit-load "lisp")
+    #+end_src
+*** Сниппеты
+    [[file:starter-kit-yasnippet.org][starter-kit-yasnippet]]
+    #+BEGIN_SRC emacs-lisp 
+      (starter-kit-load "yasnippet")
+    #+END_SRC
+*** LaTeX
+    [[file:starter-kit-latex.org][starter-kit-latex]]
+    #+begin_src emacs-lisp
+      (starter-kit-load "latex")
+    #+end_src
+
+    Добавляем cdlatex для org-mode
+    #+begin_src emacs-lisp
+      (add-hook 'org-mode-hook 'turn-on-org-cdlatex )
+    #+end_src
+** Другие источники
+*** Автодополнение
+    Устанавливаем и загружаем конфигурацию по умолчанию
+    #+begin_src emacs-lisp
+      (starter-kit-install-if-needed 'auto-complete)
+      (require 'auto-complete-config)
+
+      (ac-config-default)
+      (global-auto-complete-mode)
+      (require 'cc-mode)
+      (require 'lisp-mode)
+      (setq-default ac-auto-start t)
+      (setq-default ac-auto-show-menu t)
+      (add-hook 'slime-mode-hook 'set-up-slime-ac)
+      (add-hook 'slime-repl-mode-hook 'set-up-slime-ac)
+      (eval-after-load "auto-complete"
+                       '(add-to-list 'ac-modes 'slime-repl-mode))
+    #+end_src
+*** Настройка speedbar
+    #+begin_src emacs-lisp 
+    (starter-kit-install-if-needed 'sr-speedbar)
+    #+end_src
+*** Нумерация строк
+    [[file:src/linum%2B.el][linum+]]
+    #+begin_src emacs-lisp
+      ;; (require 'linum+)
+      ;; (setq linum-format "%d ")
+      ;; (global-linum-mode 1)
+    #+end_src
+*** режим для README файлов в формате Markdown
+    #+begin_src emacs-lisp
+      (starter-kit-install-if-needed 'markdown-mode)
+    #+end_src
+*** Smartparens
+    #+begin_src emacs-lisp :tangle yes
+      (starter-kit-install-if-needed 'smartparens)
+
+      (require 'smartparens-config)
+      (smartparens-global-mode)
+
+    #+end_src
+*** Slime
+    #+begin_src emacs-lisp :tangle yes
+      (starter-kit-install-if-needed 'slime)
+
+      (require 'slime)
+      (require 'slime-autoloads)
+      (slime-setup '(slime-asdf
+                     slime-fancy
+                     slime-indentation
+                     slime-banner))
+      (setq-default slime-net-coding-system 'utf-8-unix)
+
+    #+end_src
+*** Multiple cursors
+
+[[https://github.com/magnars/multiple-cursors.el][README]]
+*Basic usage*
+Start out with:
+#+begin_src emacs-lisp :tangle yes
+  (starter-kit-install-if-needed 'multiple-cursors)
+  (require 'multiple-cursors)
+#+end_src
+
+Then you have to set up your keybindings - multiple-cursors doesn't
+presume to know how you'd like them laid out. Here are some examples:
+
+When you have an active region that spans multiple lines, the
+following will add a cursor to each line:
+
+#+begin_src emacs-lisp :tangle yes
+  (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+#+end_src
+When you want to
+add multiple cursors not based on continuous lines, but based on
+keywords in the buffer, use:
+#+begin_src emacs-lisp :tangle yes
+  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+#+end_src
+First mark the word, then add more cursors.
+
+To get out of multiple-cursors-mode, press <return> or C-g. The latter
+will first disable multiple regions before disabling multiple
+cursors. If you want to insert a newline in multiple-cursors-mode, use
+C-j.
+*** W3M
+    Попытаемся перейти на броузер W3M. Местами Chrome надоедает своей
+    объемностью. Хочется чего-то более легкого.
+    #+begin_src emacs-lisp :tangle yes
+      ;;; instalation package
+      (starter-kit-install-if-needed 'w3m)
+
+    #+end_src
+* Дополнительные функции
+** Настройка shell
+   Zsh работает с emacs не адекватно. Рабочее решение перевести его на
+   работу с bash
+   #+begin_src emacs-lisp :tangle yes
+     (setq explicit-shell-file-name "/bin/bash")
+   #+end_src
+** Макросы для сайта Радонежского народа
+   Здесь определяются макросы для облегчения работы с материалами на
+   сайт. Статьи посылаются в формате doc/docx и содержат в себе
+   картинки. Их необходимо извелечь, а статью перекодировать в
+   html. При этом учесть, что на сайте картинки будут расположены в
+   определенном месте: 
+   news/{anons,reportaj}/<<раздел для статьи>>/<<имя статьи>>/
+* Настройка org-mode
+  Сделать TODO зависимыми от вложенных 
+  #+BEGIN_SRC emacs-lisp
+    (setq org-enforce-todo-dependencies t)
+  #+END_SRC
+
+  Задать TODO, STARTED, DONE | CANCELED
+
+  #+begin_src emacs-lisp
+    (setq org-todo-keywords
+          '((sequence "TODO(t!)" "|" "DONE(d!)")
+            (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELED(c@/!)" "PHONE" "MEETING")))
+
+    (setq org-todo-keyword-faces
+          '(("TODO" :foreground "red" :weight bold)
+            ;; ("IN PROGRESS" :foreground "yellow" :weight bold)
+            ;; ("DONE" :foreground "green" :weight bold)
+            ("WAITING" :foreground "orange" :weight bold)
+            ("HOLD" :foreground "magenta" :weight bold)
+            ("CANCELED" :foreground "forest green" :weight bold)
+            ("MEETING" :foreground "forest green" :weight bold)
+            ("PHONE" :foreground "forest green" :weight bold)))
+
+    (add-hook 'org-mode-hook (lambda () (local-set-key "\C-c." 'org-time-stamp)))
+
+  #+end_src
+
+  #+begin_src emacs-lisp :tangle yes
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((python . t) (ditaa . t) (dot . t) (C . t)))
+  #+end_src
+
+  Задаем формат даты для экспорта
+  #+BEGIN_SRC emacs-lisp
+    (setq org-export-date-timestamp-format "%F")
+  #+END_SRC
+
+  
