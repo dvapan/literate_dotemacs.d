@@ -414,8 +414,9 @@ packages
   #+END_SRC
 - darkroom
   #+BEGIN_SRC emacs-lisp
-    (starter-kit-install-if-needed 'darkroom)
-    (require 'darkroom)
+    (use-package darkroom
+                 :ensure t)
+        
   #+END_SRC
 ** Load User/System Specific Files
 *** System/User specific customizations
