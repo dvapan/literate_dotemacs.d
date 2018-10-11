@@ -8,11 +8,16 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
   First check installation of this package.
 
   #+BEGIN_SRC emacs-lisp
-    (starter-kit-install-if-needed 'projectile)
+    ;;(starter-kit-install-if-needed 'projectile)
   #+END_SRC
 
   Stup global projectile mode
 
   #+BEGIN_SRC emacs-lisp
-    (projectile-global-mode)
+    (use-package projectile
+                 :ensure t
+                 :config
+                 (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+                 (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+                 (projectile-mode +1))(projectile-global-mode)
   #+END_SRC

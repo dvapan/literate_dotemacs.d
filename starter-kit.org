@@ -397,16 +397,25 @@ everyone using the starter kit.
 
 - Additional setup [[file:starter-kit-misc-recommended.org][starter-kit-misc-recommended]]
   #+BEGIN_SRC emacs-lisp 
-    (starter-kit-load "misc-recommended")"Loaded /home/daniil/.emacs.d/starter-kit-misc-recommended.el"
+    (starter-kit-load "misc-recommended")
   #+END_SRC
   
 ** Load other packages
 The following files contains instructions for download and setup some
 packages
 
+- Use-package in [[file:starter-kit-use-package.org][starter-kit-use-package]]
+  #+BEGIN_SRC emacs-lisp
+      (starter-kit-load "starter-kit-use-package.org")
+  #+END_SRC
 - Projectile in [[file:starter-kit-projectile.org][starter-kit-projectile]]
   #+BEGIN_SRC emacs-lisp
     (starter-kit-load "starter-kit-projectile.org")
+  #+END_SRC
+- darkroom
+  #+BEGIN_SRC emacs-lisp
+    (starter-kit-install-if-needed 'darkroom)
+    (require 'darkroom)
   #+END_SRC
 ** Load User/System Specific Files
 *** System/User specific customizations

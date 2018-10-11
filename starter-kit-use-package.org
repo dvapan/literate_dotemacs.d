@@ -1,0 +1,12 @@
+#+TITLE: Starter Kit Use-package
+#+OPTIONS: toc:nil num:nil ^:nil
+
+This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
+
+* Starter Kit Use-package
+
+  First check installation of this package.
+
+  #+BEGIN_SRC emacs-lisp
+    (starter-kit-install-if-needed 'use-package)
+  #+END_SRC
