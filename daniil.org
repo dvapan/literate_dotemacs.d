@@ -36,6 +36,11 @@
     #+begin_src emacs-lisp
       (add-hook 'org-mode-hook 'turn-on-org-cdlatex )
     #+end_src
+*** Python
+    [[file:starter-kit-python.org][starter-kit-python]]
+    #+begin_src emacs-lisp
+      (starter-kit-load "python")
+    #+end_src
 ** Другие источники
 *** Автодополнение
     Устанавливаем и загружаем конфигурацию по умолчанию

@@ -146,14 +146,14 @@ general starter-kit updates without conflict.
      =starter-kit-python.org= either by directly copying the sections
      that look useful into your personal config, or simply by loading
      the entire file directly with the following.
-     #+begin_src emacs-lisp
+     #+begin_src emacs-lisp :tangle no
        (starter-kit-load "python")
      #+end_src
 
      Alternately you can load only one particular subsection of an
      included file, for example to load just the "pretty-summary"
      section of =starter-kit-gnus.org= run the following.
-     #+begin_src emacs-lisp
+     #+begin_src emacs-lisp :tangle no
        (starter-kit-load "gnus" "pretty-summary")
      #+end_src
      
@@ -162,7 +162,7 @@ general starter-kit updates without conflict.
      =starter-kit-misc-recommended.org= which are tagged =visual= add
      the following to your personal initialization.  Note: header id's
      take priority over tags.
-     #+begin_src emacs-lisp
+     #+begin_src emacs-lisp :tangle no
        (starter-kit-load "gnus" "visual")
      #+end_src
 
@@ -418,6 +418,25 @@ packages
                  :ensure t)
         
   #+END_SRC
+- evil
+  #+BEGIN_SRC emacs-lisp
+    (use-package evil
+      :ensure t ;; install the evil package if not installed
+      :init ;; tweak evil's configuration before loading it
+      (setq evil-search-module 'evil-search)
+      (setq evil-ex-complete-emacs-commands nil)
+      (setq evil-vsplit-window-right t)
+      (setq evil-split-window-below t)
+      (setq evil-shift-round nil)
+      (setq evil-want-C-u-scroll t)
+      :config ;; tweak evil after loading it
+      (evil-mode)
+
+      ;; example how to map a command in normal mode (called 'normal state' in evil)
+      (define-key evil-normal-state-map (kbd ", w") 'evil-window-vsplit))
+  #+END_SRC
+
+
 ** Load User/System Specific Files
 *** System/User specific customizations
 You can keep system- or user-specific customizations here in either
