@@ -435,6 +435,14 @@ packages
       ;; example how to map a command in normal mode (called 'normal state' in evil)
       (define-key evil-normal-state-map (kbd ", w") 'evil-window-vsplit))
   #+END_SRC
+- evil-collection
+  #+BEGIN_SRC emacs-lisp
+    (use-package evil-collection
+        :after evil
+        :ensure t
+        :config
+        (evil-collection-init))
+  #+END_SRC
 
 
 ** Load User/System Specific Files
