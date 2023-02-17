@@ -59,6 +59,7 @@ scratch
 secret.org
 .emacs.desktop*
 .*~
+*~
 agent/*
 
 ## package directory
